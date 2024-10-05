@@ -1,0 +1,1217 @@
+---
+title: "Project 1 EDA"
+author: "Diahmin Hawkins dlh2166@columbia.edu"
+date: "9/19/2024"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+```{r}
+#Data
+
+
+
+library(readr)
+marathon_dates <- read_csv("marathon_dates.csv")
+course_record <- read_csv("course_record.csv")
+aqi_values <- read_csv("aqi_values.csv")
+project1 <- read_csv("project1.csv")
+```
+
+```{r}
+#Packages
+library(lubridate)
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(naniar)
+library(visdat)
+library(kableExtra)
+library(knitr)
+library(gridExtra)
+library(ggridges)
+
+```
+
+```{r}
+
+# head(course_record)
+# head(marathon_dates)
+# head(project1)  # Change project 1 column name to gender 
+# marathon_dates
+
+
+#Course Record  Data Management
+
+course_record<- course_record%>%
+  mutate(Race_Seconds= as.numeric(hms(course_record$CR)))
+
+#Change column names from Sex... to Gender to match project1 dataset
+colnames(course_record)[colnames(course_record) == "Sex (0=F, 1=M)"] ="Gender"
+
+# Mutate the Race names from numbers to the marathon cities for better understanding
+
+
+# Change the Race variable to a character variable
+course_record <- course_record %>%
+  mutate(Race = as.character(Race))
+
+head(course_record)
+
+```
+
+```{r}
+
+
+# Project 1 Data Management
+
+
+#Change colnames for a more readable and understanding approach
+colnames(project1)[colnames(project1) == "Sex (0=F, 1=M)"] ="Gender"
+colnames(project1)[colnames(project1) == "Race (0=Boston, 1=Chicago, 2=NYC, 3=TC, 4=D)"] ="Race"
+colnames(project1)[colnames(project1) == "Td, C"] ="Dry bulb Temp C"
+colnames(project1)[colnames(project1) == "Tw, C"] ="Wet bulb Temp C"
+colnames(project1)[colnames(project1) == "%rh"] ="Percent Relative Humidity"
+colnames(project1)[colnames(project1) == "Tg, C"] ="Black Globe Temp C"
+colnames(project1)[colnames(project1) == "SR W/m2"] ="Solar Radiation"
+colnames(project1)[colnames(project1) == "DP"] ="Dew Point in C"
+colnames(project1)[colnames(project1) == "Wind"] ="Wind Speed"
+colnames(project1)[colnames(project1) == "WBGT"] ="Wet Bulb Globe Temp"
+colnames(project1)[colnames(project1) == "%CR"] ="Percent CR"
+#change gender if 0 to F to represent female
+project1$Gender<-ifelse(project1$Gender== "0","F","M")  #change gender if 0 to F to represent female else M
+
+
+# Mutate the Race names from numbers to the marathon cities for better understanding
+project1 <- project1 %>%
+  mutate(Race = case_when(
+    Race == "0" ~ "B",
+    Race == "1" ~ "C",
+    Race == "2" ~ "NY",
+    Race == "3" ~ "TC",
+    Race == "4" ~ "D"))
+
+
+#Change the Race variable to a character variable
+project1 <- project1 %>%
+  mutate(Race = as.character(Race))
+
+# Merge the two dataframes 
+course_record_project1<-left_join(project1,course_record,
+                                  by= c("Race","Gender", "Year"))
+
+# Change the Course Percentage %CR into course seconds
+course_record_project1 <- course_record_project1 %>%
+  mutate(Runtimes = Race_Seconds * (1 + (`Percent CR` / 100)))
+
+
+head(course_record_project1)
+head(project1)
+head(course_record)
+```
+
+## Missing Data Attributes
+Possibly Meet Completely at random because the the course_record wasn't dependent on the project 1 data. They carried some of the same attributes and shared covariates the we can't say one is dependent of the other.
+
+
+```{r}
+
+#Get the sum on NA's to get assumptions  (MCAR) 
+sum(is.na(course_record_project1))
+
+str(course_record_project1)
+course_record_project1%>% vis_dat()
+vis_miss(course_record_project1)
+course_record_project1%>% glimpse()
+
+
+
+#Get the sum of Missing Data for each column
+Missing_Data<- sapply(course_record_project1, function(x) sum(is.na(x)))
+
+# Convert to dataframe
+Missing_Data_df <- data.frame(ColumnName = names(Missing_Data), `Missing Data` = Missing_Data)
+
+# Set names for the dataframe columns i
+names(Missing_Data_df) <- c("Variables", "Missing Data")
+
+#Make the Missing Data to a dataframe 
+as.data.frame(Missing_Data)
+
+
+#Create Variable Description Dataframe
+Variables_dataframe<- data_frame(
+  Variables= c("Race", "Year", "Gender", "Flag", "Age (yr)",
+               "Percent CR", "Dry bulb Temp C","Wet bulb Temp C",        
+               "Percent Relative Humidity", "Black Globe Temp C","Solar Radiation",  
+               "Dew Point in C", "Wind Speed" ,"Wet Bulb Globe Temp","CR",
+               "Race_Seconds","Runtimes", "age_ranges"),
+  Type= c("Character", "Numeric", "Character", "Character","Numeric",
+          "Numeric","Numeric", "Numeric", "Numeric","Numeric","Numeric","Numeric",
+          "Numeric","Numeric", "HMS/Numeric", "Numeric","Numeric", "Categorical"),
+  Description= c("Race represents the marathons the participants competed, including the B=Boston Marathon,
+                 C= Chicago Marathon, NY= New York City Marathon,T= Twin Cities Marathon (Minneapolis,MN),
+                 D= Grandma's Marathon (Duluth, MN).",
+                 "Years represented in the dataset ranging from 1993-2016.",
+                 "Gender is represented by F= Female and M= Male.",
+                 "Flag WBGT Thresholds. White= WBGT < 10C, Green= WBGT 10-18C, Yellow=WBGT >18-23C,
+                 Red= WBGT >23-28C, and Black= WBGT > 28C",
+                 "Age (yr) represents the ages of the participants.",
+                 "Percent CR is the percent off current course record by gender.",
+                 "Dry bulb Temp Celcius is the air temperature without taking into account of the humidity or any
+                 moisture.",
+                 "Wet bulb Temp Celcius is a measure of temperature that reflects both the heat and humidity in the air. Wet bulb temperature gives you an idea of how temperature feels when you take humidity into account. ",
+                 "Percent Relative Humidity how much moisture is in the air compared to the maximum amount of moisture the air can hold at a given temperature. Gives an idea of how humid it feels outside.",
+                 "Black Globe Temp Celcius  indicates how hot it feels in direct sunlight.It considers temperature, humidity, wind speed, sun angle, and cloud cover to provide a holistic view of the stress placed on the body in hot environments.",
+                 "Solar Radiation in Watts per meter squared is the energy emitted by the sun, which travels through space and reaches the Earth as light and heat.",
+                 "Dew Point in Celcius is the temperature the air needs to be cooled to (at constant pressure)                  in order to achieve a relative humidity (RH) of 100%. At this point the air cannot hold more                   water in the gas form. If the air were to be cooled even more, water vapor would have to come out of the atmosphere in the liquid form, usually as fog or precipitation.",
+                 "Wind Speed in Km/hr.",
+                 "Wet Bulb Globe Temp measures the combined effect of temperature, humidity, wind speed, and solar radiation on humans. Formula WBGT= 0.7 x Tw + 0.2 x Tg+ 0.1 xTd.",
+                 "CR is the course record for each marathon.",
+                 "Race_Seconds is the course record  measured in seconds.",
+                 "Runtimes is the converted gender percentage into seconds. This represent the marathon runners runtime in seconds.",
+                 "Age_ranges are the age groups.")
+)
+
+# Make Missing Data df Variables  a character 
+Missing_Data_df$Variables <- as.character(Missing_Data_df$Variables)
+
+#Make Variables dataframe Variables a character 
+Variables_dataframe$Variables <- as.character(Variables_dataframe$Variables)
+
+#Merge the two dataframes
+merged_df <- merge(Missing_Data_df, Variables_dataframe, by = "Variables", all = TRUE)
+
+#Create kable_Extra table for the merged_df
+merged_df%>%
+  kbl(caption = "Marathon Runners' Data Description") %>%
+  kable_classic(full_width = F, html_font = "Cambria", font_size= 12)
+
+# Create the table with kable and customize with kableExtra
+kable(merged_df, "latex", booktabs = TRUE, caption = "Marathon Runners' Data Description") %>%
+  kable_styling(latex_options = c("striped", "scale_down")) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "2cm") %>%
+  column_spec(4, width = "8cm")
+
+
+
+# Assuming 'merged_df' is already loaded and contains your data
+# Create the table using kable and customize with kableExtra
+
+kable(merged_df, "latex", booktabs = TRUE, longtable = TRUE, caption = "Marathon Runners' Data Description") %>%
+  kable_styling(latex_options = c("striped", "scale_down", "hold_position"), full_width = FALSE) %>%
+  column_spec(1, width = "3cm") %>%  # Adjust width based on content
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "3cm") %>%
+  column_spec(4, width = "10cm") 
+
+
+#Remove all the Na's from the dataset 
+course_record_project1<- na.omit(course_record_project1)
+
+
+
+
+
+```
+
+#AIM 1: Examine effects of increasing age on marathon performance in men and women
+AIM 2: Explore the impact of environmental conditions on marathon performance, and whether the impact differs across age and gender.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+In the course record data we have Pecent CR which give percentages by gender
+In the project 1 data we have course record overall has race seconds
+## Aim 1: Examine effects of increasing age on marathon performance in men and women.
+
+
+```{r}
+#Find the minimum age 
+min(course_record_project1$`Age (yr)`)
+
+#Find the maximum age
+max(course_record_project1$`Age (yr)`)
+
+
+
+
+#Create Age Ranges/ Age Breaks to Categorize the groups
+
+course_record_project1$age_ranges<- cut(
+  course_record_project1$`Age (yr)`,
+  breaks = c(0, 25, 35, 45, 55, 65, 75, Inf),  # Custom breaks for the new age ranges
+  labels = c("<15-25", "26-35", "36-45", "46-55", "56-65", "66-75", "76+")
+
+)
+
+#Get Counts By Age Group to see balance
+age_range_counts <- course_record_project1 %>%
+  group_by(age_ranges)%>%
+  summarise(count=n())
+
+age_range_counts
+
+marathon_performance_by_age<- course_record_project1%>%
+  select(Race,Year, Gender, age_ranges, Runtimes, `Age (yr)`)%>%
+  group_by(Race, Year, Gender, age_ranges)
+
+#Get the best course_record from each race 
+best_course_race<- course_record_project1 %>%
+  filter(Runtimes <= Race_Seconds)%>%
+  group_by(Race, Gender, age_ranges)%>%
+  summarise(count=n())
+
+
+# Rename some of the column names
+best_course_race <- best_course_race %>%
+  rename(
+    `Marathon` = Race,          # Rename 'Race' to 'Race Name'
+    `Gender` = Gender,           # Keep the 'Gender' column as is (optional)
+    `Age Range` = age_ranges,    # Rename 'age_ranges' to 'Age Range'
+    `Number of Participants` = count  # Rename 'count' to 'Number of Participants'
+  )
+
+# Create the table with the new column names and specified styling
+best_course_race %>%
+  kbl(caption = "<div style='text-align:center; font-size:24px; font-weight:bold;'>Marathon Runners with High Performance by Race</div>") %>%
+  kable_classic(full_width = F, html_font = "Cambria", font_size = 20) %>%
+  kable_styling(position = "center", font_size = 16) 
+
+
+worst_course_race <- course_record_project1 %>%
+  filter(Runtimes >= Race_Seconds) %>%
+  group_by(Race,Gender, age_ranges)%>%
+  summarise(count=n())
+
+
+
+just_gender_age_ranges<- course_record_project1 %>%
+  filter(Runtimes >= Race_Seconds) %>%
+  group_by(Gender, age_ranges)%>%
+  summarise(count=n())
+
+worst_course_race %>%
+  kbl(caption = "Number of Marathon Runners that Did not beat the Course Record by Race, Gender, and Age Group") %>%
+  kable_classic(full_width = F, html_font = "Times New Roman", font_size= 20)
+  
+
+# Create bar plot od the Worst Course Race varaiable for easier read
+ggplot(worst_course_race, aes(x = Race, y = count, fill = Gender)) +
+  geom_bar(stat = "identity", position = "dodge") +  # Create a bar plot, grouped by Gender
+  labs(title = "Number of Marathon Runners that Did not beat the Course Record by Race, Gender, and Age Group",
+       x = "Race",
+       y = "Marathon Runners") +
+  scale_fill_manual(values = c("F" = "hotpink", "M" = "royalblue")) +  # colors pink for F and blue for M
+  facet_wrap(~ age_ranges) + 
+  theme_minimal()  
+
+
+```
+
+```{r}
+library(gridExtra)
+
+# Create the boxplot
+age_boxplot<-ggplot(marathon_performance_by_age, aes(x = age_ranges, y =Runtimes, fill = Gender)) +
+  geom_boxplot() +
+  labs(title = "Effects of Age on Marathon Performance in Men and Women",
+       x = "Age Ranges",
+       y = "Percent CR Seconds (Performance)") +
+   scale_fill_manual(values = c("F" = "hotpink", "M" = "royalblue"))+
+  theme_minimal()
+
+
+age_boxplot
+
+
+age_plot<-ggplot(marathon_performance_by_age, aes(x = `Age (yr)`, y = Runtimes, color = Gender)) +
+  geom_point(alpha = 0.05) +
+  geom_smooth(se = FALSE, linewidth = 1.5) +
+  labs(title = "Effects of Age on Marathon Performance in Men and Women",
+       x = "Ages",
+       y = " Runtime Performance") +
+  scale_color_manual(values = c("F" = "hotpink", "M" = "royalblue")) +
+  theme_minimal()
+
+age_plot
+
+
+
+# Create the boxplot, faceting by Race
+ggplot(marathon_performance_by_age, aes(x = age_ranges, y = Runtimes, fill = Gender)) +
+  geom_boxplot() +
+  facet_wrap(~ Race) +  # Facet by Race to create separate plots for each race
+  labs(title = "Effects of Age on Marathon Performance by Race, Gender, and Age",
+       x = "Age Ranges",
+       y = "Percent CR Seconds (Performance)") +
+  theme_minimal()
+
+
+
+
+
+
+
+
+# Create the boxplot, faceting by Race
+ggplot(marathon_performance_by_age, aes(x = age_ranges, y =Runtimes, fill = Gender)) +
+  geom_boxplot() +
+  facet_wrap(~ Year) +  # Facet by Race to create separate plots for each race
+  labs(title = "Effects of Age on Marathon Performance by Race, Gender, and Age by year",
+       x = "Age Ranges",
+       y = "Percent CR Seconds (Performance)") +
+  theme_minimal()
+
+
+
+
+# Create the boxplot, faceting by Race
+ggplot(marathon_performance_by_age, aes(x = age_ranges, y = Runtimes, fill = Gender)) +
+  geom_boxplot() +
+  facet_wrap(~ Race) +  # Facet by Race to create separate plots for each race
+  labs(title = "Effects of Age on Marathon Performance by Race, Gender, and Age",
+       x = "Age Ranges",
+       y = "Percent CR Seconds (Performance)") +
+  theme_classic()
+
+
+
+
+
+
+
+```
+
+
+
+
+
+
+##  Explore the impact of environmental conditions on marathon performance, and whether the impact differs across age and gender.
+Higher temperatures lead to slower times 
+stratify by gender age 
+
+
+```{r}
+
+ environmental_conditions <- course_record_project1 %>%
+  select(Race, Gender, `Age (yr)`, Runtimes, `Dry bulb Temp C`, `Wet bulb Temp C`,
+  `Percent Relative Humidity`, `Black Globe Temp C`, `Solar Radiation`,`Dew Point in C`, 
+  `Wind Speed`, `Wet Bulb Globe Temp`, age_ranges) %>%   
+  group_by( Gender, `Age (yr)`)
+
+```
+
+
+
+```{r, eval=FALSE}
+#runs stuff that doesnt need to run for knitting purposes
+
+```
+
+Linear Model Approach
+```{r}
+
+# # Ensure Gender is a factor if not already
+# environmental_conditions$Gender <- as.factor(environmental_conditions$Gender)
+# 
+ 
+# Linear to evaluate statistical significance
+model <- lm(Runtimes ~ `Dry bulb Temp C` + `Percent Relative Humidity` + `Black Globe Temp C` + 
+         `Wind Speed` + `Dew Point in C` + `Solar Radiation` + `Age (yr)` + `Wet Bulb Globe Temp` + Gender +
+         `Dry bulb Temp C`:`Age (yr)` + `Percent Relative Humidity`:`Age (yr)` + 
+         `Black Globe Temp C`:`Age (yr)` +`Wind Speed`:`Age (yr)` + `Dew Point in C`:`Age (yr)` + 
+         `Solar Radiation`:`Age (yr)` + `Wet Bulb Globe Temp`:`Age (yr)` + Gender:`Age (yr)` +
+         `Dry bulb Temp C`:Gender + `Percent Relative Humidity`:Gender + `Black Globe Temp C`:Gender +
+          `Wind Speed`:Gender + `Dew Point in C`:Gender + `Solar Radiation`:Gender +
+          `Wet Bulb Globe Temp`:Gender, data = environmental_conditions)
+
+summary(model)
+
+# Load necessary libraries
+library(ggplot2)
+library(corrplot)  # For creating a correlation plot
+
+# Assuming course_records is your data frame
+
+# Step 1: Select only numeric columns from the data frame
+numeric_data <- course_record_project1%>%
+  select(Runtimes, `Dry bulb Temp C` , `Percent Relative Humidity` , `Black Globe Temp C` ,
+       `Wind Speed` , `Dew Point in C` ,`Solar Radiation` , `Age (yr)` ,`Wet Bulb Globe Temp`)
+
+
+# Step 2: Compute the correlation matrix
+cor_matrix <- cor(numeric_data, use = "complete.obs")  # Use complete.obs to ignore NAs
+
+# Step 3: Visualize the correlation matrix using corrplot
+corrplot(cor_matrix, method = "circle", type = "lower", tl.col = "black", tl.srt = 45)
+
+
+# Melt the correlation matrix for ggplot2
+library(reshape2)
+cor_data <- melt(cor_matrix)
+
+# Create the ggplot correlation heatmap
+#  Break down and Visualization of  the correlation matrix with environmental on age variable names
+corrplot(cor_matrix, 
+         method = "circle",          # Use circle method for visualization
+         type = "lower",             # Only display lower triangle
+         tl.col = "black",           # Color of the text labels
+         tl.srt = 45,                # Rotate the text labels at 45 degrees
+         tl.pos = "lt",              # Display text labels on left and top
+         col = COL2('PiYG'),         # Color palette for the plot
+         cl.pos = 'b',               # Place the color legend at the bottom
+         addCoef.col = 'grey50',     # Add correlation coefficient values in grey
+         is.corr = TRUE,             # Ensure this is treated as a correlation matrix
+         col.lim = c(-1, 1)          # Set the color limit for correlation values
+)
+
+# Dry bulb plot
+ dry_bulb_plot<-ggplot(environmental_conditions, aes(x = `Dry bulb Temp C`, y = Runtimes, color = Gender)) +
+  geom_point() +  # Scatter plot
+  geom_smooth(method = "lm", formula = y ~ x, color = "black") +  # Linear regression line with confidence interval
+ # Adding labels with gender
+  facet_wrap(~ age_ranges) +  # Facet the plot by age_ranges
+  theme_bw() +  # Black and white theme
+  guides(color = 'none') +  # Remove legend for color
+  labs(title = "Marathon Performance vs. Dry Bulb Temperature by Age Ranges",
+       x = "Dry Bulb Temperature (°C)",
+       y = "Marathon Performance (Percent CR Seconds)")+
+  scale_fill_manual(values = c("Male" = "blue", "Female" = "pink"))
+
+ 
+  dry_bulb_plot
+# Humidity 
+humidity_runtimes<- ggplot(environmental_conditions, aes(x = `Percent Relative Humidity`, y = Runtimes, color = Gender)) +
+  geom_point() +  # Scatter plot
+  geom_smooth(method = "lm", formula = y ~ x, color = "black") +  # Linear regression line with confidence interval
+ # Adding labels with gender
+  facet_wrap(~ age_ranges) +  # Facet the plot by age_ranges
+  theme_bw() +  # Black and white theme
+  guides(color = 'none') +  # Remove legend for color
+  labs(title = "Marathon Performance vs. Humidity Stratified by Age Ranges ",
+       x = "Pecent Relative Humidity %",
+       y = "Marathon Performance (Runtimes")+
+  scale_fill_manual(values = c("Male" = "blue", "Female" = "pink"))
+
+humidity_runtimes
+
+ # Black Globe Temperature
+black_globe_temp_graph<- ggplot(environmental_conditions, aes(x = `Black Globe Temp C`, y = Runtimes, color = Gender)) +
+  geom_point() +  # Scatter plot
+  geom_smooth(method = "lm", formula = y ~ x, color = "black") +  # Linear regression line with confidence interval
+ # Adding labels with gender
+  facet_wrap(~ age_ranges) +  # Facet the plot by age_ranges
+  theme_bw() +  # Black and white theme
+  guides(color = 'none') +  # Remove legend for color
+  labs(title = "Marathon Performance vs. Dry Bulb Temperature Stratified by Age Groups",
+       x = "Black Globe Temp  (°C)",
+       y = "Marathon Performance (Runtimes)")+
+  scale_fill_manual(values = c("Male" = "blue", "Female" = "pink"))
+
+black_globe_temp_graph
+ 
+ 
+ # Wet Bulb Temperature
+ wet_bulb_graph<-ggplot(environmental_conditions, aes(x = `Wet Bulb Globe Temp`, 
+                       y = Runtimes, color = Gender)) +geom_point() +  # Scatter plot
+                       geom_smooth(method = "lm", formula = y ~ x, color = "black") +  # Linear regression line with confidence interval
+ # Adding labels with gender
+  facet_wrap(~ age_ranges) +  # Facet the plot by age_ranges
+  theme_bw() +  # Black and white theme
+  guides(color = 'none') +  # Remove legend for color
+  labs(title = "Marathon Performance vs. Wet Bulb Globe Temp Stratified by Age Groups",
+       x = "Wet Bulb Globe Temp (°C)",
+       y = "Marathon Performance (Runtimes)")+
+  scale_fill_manual(values = c("Male" = "blue", "Female" = "pink"))
+
+ wet_bulb_graph
+ 
+ #Solar Radiation Graph
+ solar_radiation_graph<-ggplot(environmental_conditions, aes(x = `Solar Radiation`, 
+                       y = Runtimes, color = Gender)) +geom_point() +  # Scatter plot
+                       geom_smooth(method = "lm", formula = y ~ x, color = "black") +  # Linear regression line with confidence interval
+ # Adding labels with gender
+  facet_wrap(~ age_ranges) +  # Facet the plot by age_ranges
+  theme_bw() +  # Black and white theme
+  guides(color = 'none') +  # Remove legend for color
+  labs(title = "Marathon Performance vs. Solar Radiation Stratified by Age Groups",
+       x = "Solar Radiation",
+       y = "Marathon Performance (Runtimes)")+
+  scale_fill_manual(values = c("Male" = "blue", "Female" = "pink"))
+
+
+
+
+
+```
+
+```{r}
+
+head(marathon_dates)
+#Change Race Names
+marathon_dates$Race
+marathon_dates <- marathon_dates %>%
+   mutate(marathon = case_when(
+     marathon == "NYC" ~ "NY",              
+     marathon == "Grandmas" ~ "D",
+     marathon == "Boston" ~ "B",
+     marathon == "Twin Cities" ~"TC" 
+  ))
+
+colnames(marathon_dates)[colnames(marathon_dates) == "marathon"] ="Race"
+colnames(marathon_dates)[colnames(marathon_dates) == "year"] ="Year"
+
+# Change formatting  of the dates
+marathon_dates <- marathon_dates %>%
+ mutate(date = as.Date(date, format = "%Y-%m-%d"))
+
+# Combine the marathon dates datframe to my current dataframe by using left_join
+course_record_project1 <- course_record_project1%>%
+    left_join(marathon_dates, by = c("Race", "Year"))
+
+names(aqi_values)
+aqi_values
+
+
+# Change the marathon variable to Race to match corresponding data and change race names
+aqi_values <- aqi_values %>%
+   rename(Race = marathon) %>%
+     mutate(
+     Race = case_when(
+     Race == "NYC" ~ "NY",              
+     Race == "Grandmas" ~ "D",
+     Race == "Boston" ~ "B",
+     Race == "Twin Cities" ~"TC" 
+  ),
+    date = as.Date(date_local, format = "%Y-%m-%d"),
+    Year = as.numeric(format(date, "%Y"))
+      ) %>%
+   select(-date_local) #Remove the date_local variable
+
+
+# calculate average ozone ppm (8-hour avg)
+avg_ppm <- aqi_values %>%
+   filter(units_of_measure == "Parts per million",
+          sample_duration == "8-HR RUN AVG BEGIN HOUR") %>%
+          group_by(Race, Year, date) %>%
+          summarize(avg_ppm = mean(arithmetic_mean, na.rm = T)) %>%
+          ungroup()
+
+
+
+# Merge data_frame to current dataframe
+ course_record_project1 <-  course_record_project1 %>%
+   left_join(avg_ppm, by = c("Race", "Year", "date"))
+ 
+ 
+```
+
+
+
+
+## AIM3: Identify the weather parameters (WBGT, Flag conditions, temperature, etc) that have the largest impact on marathon performance.
+
+```{r}
+weather_parameters<-course_record_project1%>%
+  select(Gender, `Age (yr)`, Runtimes, `Dry bulb Temp C`, `Wet bulb Temp C`,
+  `Percent Relative Humidity`, `Black Globe Temp C`, `Solar Radiation`,`Dew Point in C`, 
+  `Wind Speed`, `Wet Bulb Globe Temp`, age_ranges, Flag)
+
+  
+  
+#   
+# flag_cat<- ggplot(weather_parameters, aes(x = Flag, y = Runtimes, color = Gender)) +
+#   boxplot() +  # Scatter plot
+#   #geom_smooth(method = "lm", formula = y ~ x, color = "black") +  # Linear regression line with confidence interval
+#  # Adding labels with gender
+#   #facet_wrap(~ age_ranges) +  # Facet the plot by age_ranges
+#   theme_bw() +  # Black and white theme
+#   guides(color = 'none') +  # Remove legend for color
+#   labs(title = "Marathon Performance vs. Dry Bulb Temperature Stratified by Age Groups",
+#        x = "Black Globe Temp  (°C)",
+#        y = "Marathon Performance (Runtimes)")
+
+
+
+# Filter and prepare the data
+weather_parameters <- course_record_project1 %>%
+  select(Gender, `Age (yr)`, Runtimes, `Dry bulb Temp C`, `Wet bulb Temp C`,
+         `Percent Relative Humidity`, `Black Globe Temp C`, `Solar Radiation`, 
+         `Dew Point in C`, `Wind Speed`, `Wet Bulb Globe Temp`, age_ranges, Flag)
+
+# Create the box plot
+flag_cat <- ggplot(weather_parameters, aes(x = Flag, y = Runtimes, color = Gender)) +
+  geom_boxplot() +  # Use geom_boxplot for creating a boxplot
+  theme_bw() +      # Black and white theme for a clean plot
+  guides(color = 'none') +  # Remove legend for color (if not needed)
+  labs(
+    title = "Marathon Performance vs. Flag Stratified by Gender",
+    x = "Flag",
+    y = "Marathon Performance (Runtimes)"
+  )
+
+# If you want to stratify by age_ranges, uncomment the following line:
+# + facet_wrap(~ age_ranges)
+  
+# Plot the result
+print(flag_cat)
+
+as.factor(course_record_project1$Flag)
+
+# Create the box plot
+flag_cat_age_ranges <- ggplot(weather_parameters, aes(x = Flag, y = Runtimes, color = Gender)) +
+  geom_boxplot() + 
+  facet_wrap(~ age_ranges) +# Use geom_boxplot for creating a boxplot
+  theme_bw() +      # Black and white theme for a clean plot
+  guides(color = 'none') +  # Remove legend for color (if not needed)
+  labs(
+    title = "Marathon Performance vs. Flag Stratified by Gender",
+    x = "Flag",
+    y = "Marathon Performance (Runtimes)"
+  )
+
+# If you want to stratify by age_ranges, uncomment the following line:
+# + facet_wrap(~ age_ranges)
+  
+# Plot the result
+print(flag_cat_age_ranges)
+
+
+# 
+# flag_exam <- ggplot(weather_parameters, aes(x = Gender, y = Runtimes, color = Flag)) +
+#   geom_boxplot() +  # Use geom_boxplot for creating a boxplot
+#   theme_bw() +      # Black and white theme for a clean plot
+#   guides(color = 'none') +  # Remove legend for color (if not needed)+
+#   scale_color_manual(values = c(
+#     "White" = "white",   # Replace these with the Flag categories and the colors you want to assign
+#     "Green" = "green",
+#     "Black" = "black",
+#     "Yellow" = "yellow",  # Add more colors for other Flag categories as needed
+#     "Red" = "red"
+#   )) +
+#   labs(
+#     title = "Marathon Performance by Flag",
+#     x = "Flag",
+#     y = "Marathon Performance (Runtimes)",
+#     color= "Flag Colors"+
+#     fill = "Flag Color"  # Title for the legend
+#   ) +
+#   theme(legend.position = "right")
+  
+  
+# Create the box plot with custom Flag colors and filled boxplots
+flag_exam <- ggplot(weather_parameters, aes(x = Gender, y = Runtimes, fill = Flag)) +
+  geom_boxplot() +  # Use geom_boxplot for creating a boxplot
+  theme_bw() +      # Black and white theme for a clean plot
+  scale_fill_manual(values = c(
+    "White" = "white",   # Replace these with the Flag categories and the colors you want to assign
+    "Green" = "green",
+    "Black" = "black",
+    "Yellow" = "yellow",  # Add more colors for other Flag categories as needed
+    "Red" = "red"
+  )) +
+  labs(
+    title = "Marathon Performance by Flag",
+    x = "Gender",
+    y = "Marathon Performance (Runtimes)",
+    fill = "Flag Color"  # Title for the legend (Fill refers to the box color)
+  ) +
+  theme(legend.position = "right")
+
+# Print the plot
+print(flag_exam)
+
+
+flag_age_ranges<- ggplot(weather_parameters, aes(x = age_ranges, y = Runtimes, fill = Flag)) +
+  geom_boxplot() +  # Use geom_boxplot for creating a boxplot
+  theme_bw() +      # Black and white theme for a clean plot
+  scale_fill_manual(values = c(
+    "White" = "white",   # Replace these with the Flag categories and the colors you want to assign
+    "Green" = "green",
+    "Black" = "black",
+    "Yellow" = "yellow",  # Add more colors for other Flag categories as needed
+    "Red" = "red"
+  )) +
+  labs(
+    title = "Marathon Performance by Flag",
+    x = "Gender",
+    y = "Marathon Performance (Runtimes)",
+    fill = "Flag Color"  # Title for the legend (Fill refers to the box color)
+  ) +
+  theme(legend.position = "right")
+
+# Print the plot
+print(flag_age_ranges)
+
+
+
+
+
+age_flag <- ggplot(course_record_project1, aes(x = `Age (yr)`, y = Runtimes, color = Flag)) +
+  geom_point(alpha = 0.5) +  # Set point transparency to 0.5 for better visibility
+  geom_smooth(se = FALSE, linewidth = 1.5) +  # Smooth line without confidence interval
+  labs(
+    title = "Effects of Age on Marathon Performance in Men and Women",
+    x = "Ages",
+    y = "Runtime Performance"
+  ) +
+  scale_color_manual(values = c(
+    "White" = "white",   # Custom color for each flag category
+    "Green" = "green",
+    "Black" = "black",
+    "Yellow" = "yellow",
+    "Red" = "red"
+  )) +
+  theme_minimal()
+
+# Print the plot
+print(age_flag)
+
+
+
+
+
+
+
+
+print(flag_exam)
+
+sum(course_record_project1$Flag=="Black")
+sum(course_record_project1$Flag=="Green")
+sum(course_record_project1$Flag=="Red")
+sum(course_record_project1$Flag=="Yellow")
+sum(course_record_project1$Flag=="White")
+
+names(course_record_project1)
+# Step 1: Select only numeric columns from the data frame
+airquality<- course_record_project1%>%
+  select(Runtimes, `Dry bulb Temp C` , `Percent Relative Humidity` , `Black Globe Temp C` ,
+       `Wind Speed` , `Dew Point in C` ,`Solar Radiation` , `Age (yr)` ,`Wet Bulb Globe Temp` , Year, 
+       avg_ppm)
+
+
+
+# Step 2: Compute the correlation matrix
+cor_matrix2 <- cor(airquality, use = "complete.obs")  # Use complete.obs to ignore NAs
+
+# Step 3: Visualize the correlation matrix using corrplot
+corrplot(cor_matrix, method = "circle", type = "lower", tl.col = "black", tl.srt = 45)
+
+
+# Melt the correlation matrix for ggplot2
+library(reshape2)
+cor_data <- melt(cor_matrix2)
+
+# Create the ggplot correlation heatmap
+#  Break down and Visualization of  the correlation matrix with environmental on age variable names
+corrplot(cor_matrix2, 
+         method = "circle",          # Use circle method for visualization
+         type = "lower",             # Only display lower triangle
+         tl.col = "black",           # Color of the text labels
+         tl.srt = 45,                # Rotate the text labels at 45 degrees
+         tl.pos = "lt",              # Display text labels on left and top
+         col = COL2('PiYG'),         # Color palette for the plot
+         cl.pos = 'b',               # Place the color legend at the bottom
+         addCoef.col = 'grey50',     # Add correlation coefficient values in grey
+         is.corr = TRUE,             # Ensure this is treated as a correlation matrix
+         col.lim = c(-1, 1)          # Set the color limit for correlation values
+)
+
+
+ggplot(data=cor_data, aes(x= Var1, y= Var2, fill=value))+
+  geom_tile(color= "white")+
+  scale_fill_gradient2(low= "blue", high="pink", mid = "white",
+  midpoint=0, 
+  limit=c(-1,1), 
+  space="Lab",
+  name="Correlation")+
+  labs(title="Correlation Between Weather Variables and Performance")+
+  theme_minimal(base_family="Times")+
+  theme(axis.text.x= element_text(angle =45, vjust= 1, hjust = 1), legend.position="bottom")
+  
+  
+
+
+
+
+
+library(dplyr)
+
+# Summarize data by Flag to calculate the median, IQR, Q1 (25th percentile), and Q3 (75th percentile) for Runtimes
+flag_summary <- course_record_project1 %>%
+  group_by(Flag) %>%
+  summarise(
+    Median_Runtime = median(Runtimes, na.rm = TRUE),       # Median of Runtimes
+    IQR_Runtime = IQR(Runtimes, na.rm = TRUE),             # IQR of Runtimes
+    Q1_Runtime = quantile(Runtimes, 0.25, na.rm = TRUE),   # Lower quartile (25th percentile)
+    Q3_Runtime = quantile(Runtimes, 0.75, na.rm = TRUE)    # Upper quartile (75th percentile)
+  )
+
+# Print the summary table
+print(flag_summary)
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, eval=FALSE}
+# plot(model)
+# 
+# cor(environmental_conditions)
+# data_for_corr <- environmental_conditions %>%
+#   select(`Dry bulb Temp C`, `Percent Relative Humidity`, `Black Globe Temp C`, 
+#          `Wind Speed`, `Dew Point in C`, `Solar Radiation`, `Age (yr)`, 
+#          `Wet Bulb Globe Temp`, Gender) %>%
+#   mutate(Gender = as.numeric(as.factor(Gender))) 
+# 
+# library(corrplot)
+# cor_matrix <- cor(data_for_corr, use = "complete.obs")  # calculating correlation matrix
+# corrplot(cor_matrix, method = "circle", type = "upper", 
+#          order = "hclust", tl.col = "black", tl.srt = 45)
+# 
+# 
+# 
+# 
+# 
+# 
+# # Load necessary library
+# library(dplyr)
+# 
+# # Assuming environmental_conditions is your main dataset
+# # Recreate the dataset making sure all variables are numeric
+# data_for_corr <- environmental_conditions %>%
+#   select(`Dry bulb Temp C`, `Percent Relative Humidity`, `Black Globe Temp C`, 
+#          `Wind Speed`, `Dew Point in C`, `Solar Radiation`, `Age (yr)`, 
+#          `Wet Bulb Globe Temp`, Gender) %>%
+#   mutate(across(where(is.factor), as.numeric),  # Convert all factors to numeric
+#          across(where(is.character), as.numeric))  # Convert all characters to numeric
+# 
+# # Check the structure of the data to confirm all are numeric
+# str(data_for_corr)
+# 
+# # Calculate the correlation matrix with complete observations
+# # Assuming Gender is a factor with levels 'Male' and 'Female'
+# data_for_corr$Gender <- as.numeric(data_for_corr$Gender) # Convert to 1 for Male, 0 for Female
+# data_for_corr$Gender <-ifelse(data_for_corr$Gender== F, 0,1)
+# cor_matrix <- cor(data_for_corr, use = "complete.obs")
+# str(data_for_corr)
+```
+
+```{r}
+
+# environmental_conditions<- course_record_project1%>%
+#   select(Race, Gender, `Age (yr)`,`Percent_CRseconds`, `Dry bulb Temp C`, `Wet bulb Temp C`,
+#          `Percent Relative Humidity`, `Black Globe Temp C`, `Solar Radiation`,
+#          `Dew Point in C`,`Wind Speed`,`Wet Bulb Globe Temp` )%>%
+#   group_by(Race, Gender, `Age (yr)`)
+# 
+# 
+# 
+# age_boxplot<-ggplot(marathon_performance_by_age, aes(x =`Age (yr)` y = Percent_CRseconds, fill = Gender)) +
+#   geom_boxplot() +
+#   labs(title = "Effects of Age on Marathon Performance in Men and Women",
+#        x = "Age Ranges",
+#        y = "Percent CR Seconds (Performance)") +
+#    scale_fill_manual(values = c("F" = "hotpink", "M" = "royalblue"))+
+#   theme_minimal()
+# 
+# ggplot(environmental_conditions, aes(x = x, y = y, color = group)) +
+#   geom_point() +  # Scatter plot
+#   stat_ellipse(level = 0.95) +  # 95% confidence ellipse
+#   labs(title = "Scatter Plot with Ellipses",
+#        x = "X Axis",
+#        y = "Y Axis") +
+#   theme_minimal()
+# 
+# library(ggplot2)
+# library(dplyr)
+# 
+
+names(course_record_project1)
+# # Filter and group the data as you described
+ environmental_conditions <- course_record_project1 %>%
+  select(Race, Gender, `Age (yr)`, `Percent CR`, `Dry bulb Temp C`, `Wet bulb Temp C`,
+         `Percent Relative Humidity`, `Black Globe Temp C`, `Solar Radiation`,          `Dew Point in C`, `Wind Speed`, `Wet Bulb Globe Temp`) %>%   group_by(Race, Gender, `Age (yr)`)
+# 
+# # Scatter plot with ellipses, using Dry bulb Temp and Wet Bulb Globe Temp as an example
+# ggplot(environmental_conditions, aes(x = `Dry bulb Temp C`, y = `Wet Bulb Globe Temp`, color = Gender)) +
+#   geom_point() +  # Scatter plot
+#   stat_ellipse(level = 0.95) +  # 95% confidence ellipse
+#   labs(title = "Scatter Plot of Environmental Conditions with Ellipses",
+#        x = "Dry Bulb Temperature (°C)",
+#        y = "Wet Bulb Globe Temperature (°C)") +
+#   facet_wrap(~ Race) +  # Facet by Race
+#   theme_minimal()
+
+
+
+# Scatter plot with ellipses, including Percent CR as point size
+# ggplot(environmental_conditions, aes(x = `Dry bulb Temp C`, y = `Wet Bulb Globe Temp`, color = Gender, size = `Percent CR`)) +
+#   geom_point(alpha = 0.7) +  # Scatter plot with alpha for transparency
+#   stat_ellipse(level = 0.95) +  # 95% confidence ellipse
+#   labs(title = "Scatter Plot of Environmental Conditions and Marathon Performance",
+#        x = "Dry Bulb Temperature (°C)",
+#        y = "Wet Bulb Globe Temperature (°C)",
+#        size = "Percent CR (Performance)") +  # Label for Percent CR
+#   facet_wrap(~ Race) +  # Facet by Race
+#   theme_minimal()
+# Explanation of Changes:
+# aes(size = Percent CR): The Percent CR variable is mapped to the size of the points, so larger (or smaller) points indicate different performance levels.
+# alpha = 0.7: Adds transparency to the points, making overlapping points easier to visualize.
+# labs(size = "Percent CR (Performance)")
+
+
+# ggplot(environmental_conditions, aes(x = `Dry bulb Temp C`, y =Percent_CRseconds, color = Gender)) +
+#   geom_point() +
+#   geom_labelsmooth(aes(label = Gender), fill = "white",
+#                 method = "lm", formula = y ~ x,
+#                 size = 3, linewidth = 1, boxlinewidth = 0.4) +
+#   theme_bw() + guides(color = 'none') # remove legend
+# 
+# library(ggplot2)
+# 
+# # Scatter plot with linear smooth and gender labels
+# ggplot(environmental_conditions, aes(x = `Dry bulb Temp C`, y = Percent_CRseconds, color = Gender)) +
+#   geom_point() +  # Scatter plot
+#   geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "black") +  # Linear regression line without confidence interval
+#   geom_label(aes(label = Gender), fill = "white", size = 3, color = "black") +  # Adding labels with gender
+#   theme_bw() +  # Black and white theme
+#   guides(color = 'none') +  # Remove legend for color
+#   labs(title = "Marathon Performance vs. Dry Bulb Temperature",
+#        x = "Dry Bulb Temperature (°C)",
+#        y = "Marathon Performance (Percent CR Seconds)")
+# 
+# 
+# library(ggplot2)
+# 
+# # Scatter plot with linear smooth, confidence interval, gender labels, and faceted by race
+# ggplot(environmental_conditions, aes(x = `Dry bulb Temp C`, y = Percent_CRseconds, color = Gender)) +
+#   geom_point() +  # Scatter plot
+#   geom_smooth(method = "lm", formula = y ~ x, color = "black") +  # Linear regression line with confidence interval
+#  # Adding labels with gender
+#   facet_wrap(~ Race) +  # Facet the plot by Race
+#   theme_bw() +  # Black and white theme
+#   guides(color = 'none') +  # Remove legend for color
+#   labs(title = "Marathon Performance vs. Dry Bulb Temperature by Race",
+#        x = "Dry Bulb Temperature (°C)",
+#        y = "Marathon Performance (Percent CR Seconds)")+
+#   scale_fill_manual(values = c("Male" = "blue", "Female" = "pink"))
+# 
+# 
+# ggplot(environmental_conditions, aes(x = `Dry bulb Temp C`, y = Percent_CRseconds, color = Gender)) +
+#   geom_point() +  # Scatter plot points
+#   geom_smooth(method = "lm", formula = y ~ x, color = "black") +  # Linear regression line with confidence interval
+#   facet_wrap(~ Race) +  # Facet the plot by Race
+#   theme_bw() +  # Black and white theme
+#   guides(color = 'none') +  # Remove the legend for color
+#   labs(title = "Marathon Performance vs. Dry Bulb Temperature by Race",
+#        x = "Dry Bulb Temperature (°C)",
+#        y = "Marathon Performance (Percent CR Seconds)") +
+#   scale_fill_manual(values = c("Male" = "blue", "Female" = "pink"))  # Custom colors for gender
+
+```
+
+
+```{r}
+
+
+```
+
+```{r}
+sum(is.na(course_record_project1))
+Missing_Data<- sapply(course_record_project1, function(x) sum(is.na(x)))
+# Convert to dataframe
+Missing_Data_df <- data.frame(ColumnName = names(Missing_Data), `Missing Data` = Missing_Data)
+
+# Set names for the dataframe columns if necessary
+names(Missing_Data_df) <- c("Variables", "Missing Data")
+
+as.data.frame(Missing_Data)
+Variables_table<- data_frame(
+  Variables= c("Race", "Year", "Gender", "Flag", "Age (yr)",
+               "Percent CR", "Dry bulb Temp C","Wet bulb Temp C",        
+               "Percent Relative Humidity", "Black Globe Temp C","Solar Radiation",  
+               "Dew Point in C", "Wind Speed" ,"Wet Bulb Globe Temp","CR",
+               "Race_Seconds","Percent_CRseconds", "age_ranges"),
+  Type= c("Character", "Numeric", "Character", "Character","Numeric",
+          "Numeric","Numeric", "Numeric", "Numeric","Numeric","Numeric","Numeric",
+          "Numeric","Numeric", "HMS/Numeric", "Numeric","Numeric", "Categorical"),
+  Description= c("Race represents the marathons the participants competed, including the B=Boston Marathon,
+                 C= Chicago Marathon, NY= New York City Marathon,T= Twin Cities Marathon (Minneapolis,MN),
+                 D= Grandma's Marathon (Duluth, MN).",
+                 "Years represented in the dataset ranging from 1993-2016.",
+                 "Gender is represented by F= Female and M= Male.",
+                 "Flag WBGT Thresholds. White= WBGT < 10C, Green= WBGT 10-18C, Yellow=WBGT >18-23C,
+                 Red= WBGT >23-28C, and Black= WBGT > 28C",
+                 "Age (yr) represents the ages of the participants.",
+                 "Percent CR is the percent off current course record for gender.",
+                 "Dry bulb Temp Celcius is the air temperature without taking into account of the humidity or any
+                 moisture.",
+                 "Wet bulb Temp Celcius is a measure of temperature that reflects both the heat and humidity in the air. Wet bulb temperature gives you an idea of how temperature feels when you take humidity into account. ",
+                 "Percent Relative Humidity how much moisture is in the air compared to the maximum amount of moisture the air can hold at a given temperature. Gives an idea of how humid it feels outside.",
+                 "Black Globe Temp Celcius  indicates how hot it feels in direct sunlight.It considers temperature, humidity, wind speed, sun angle, and cloud cover to provide a holistic view of the stress placed on the body in hot environments.",
+                 "Solar Radiation in Watts per meter squared is the energy emitted by the sun, which travels through space and reaches the Earth as light and heat.",
+                 "Dew Point in Celcius is the temperature the air needs to be cooled to (at constant pressure)                  in order to achieve a relative humidity (RH) of 100%. At this point the air cannot hold more                   water in the gas form. If the air were to be cooled even more, water vapor would have to come out of the atmosphere in the liquid form, usually as fog or precipitation.",
+                 "Wind Speed in Km/hr.",
+                 "Wet Bulb Globe Temp measures the combined effect of temperature, humidity, wind speed, and solar radiation on humans. Formula WBGT= 0.7 x Tw + 0.2 x Tg+ 0.1 xTd.",
+                 "CR is the course record for each marathon.",
+                 "Race_Seconds is the course record  measured in seconds.",
+                 "Percent_CRseconds is the converted gender percentage into seconds.",
+                 "Age_ranges are the age groups.")
+)
+Missing_Data_df$Variables <- as.character(Missing_Data_df$Variables)
+Variables_table$Variables <- as.character(Variables_table$Variables)
+merged_df <- merge(Missing_Data_df, Variables_table, by = "Variables", all = TRUE)
+
+merged_df%>%
+  kbl(caption = "Marathon Runners' Data Description") %>%
+  kable_classic(full_width = F, html_font = "Cambria", font_size= 12)
+
+# Create the table with kable and customize with kableExtra
+kable(merged_df, "latex", booktabs = TRUE, caption = "Marathon Runners' Data Description") %>%
+  kable_styling(latex_options = c("striped", "scale_down")) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "2cm") %>%
+  column_spec(4, width = "8cm")
+
+library(knitr)
+library(kableExtra)
+
+# Assuming 'merged_df' is already loaded and contains your data
+# Create the table using kable and customize with kableExtra
+
+kable(merged_df, "latex", booktabs = TRUE, longtable = TRUE, caption = "Marathon Runners' Data Description") %>%
+  kable_styling(latex_options = c("striped", "scale_down", "hold_position"), full_width = FALSE) %>%
+  column_spec(1, width = "3cm") %>%  # Adjust width based on content
+  column_spec(2, width = "2cm") %>%
+  column_spec(3, width = "3cm") %>%
+  column_spec(4, width = "10cm") 
+
+
+
+```
+
+
+
+
+#Aim 3 what has the largest impact
+
+
+```{r}
+
+
+library(ggwordcloud)
+library(ggplot2)
+library(magick)  
+
+# Path to your image
+fig_path <- "/Users/diahminhawkins/Documents/GitHub/Project1/weather.png"
+getwd()
+# Load the image using magick
+img <- image_read(fig_path)
+
+# Convert image to raster for use in ggplot
+img_raster <- as.raster(img)
+
+
+# Example data
+words <- c("Boston", "New York City", "Minneapolis", "Grandma's", "Chicago", 
+           "Race", "Age", "Gender", "Weather", "Performance", 
+           "Wet Bulb Globe Temperature", "Humidity")
+
+frequencies <- c(1, 1, 1, 1, 1, 1, 5, 1, 4, 15, 3, 14)
+
+new_frame <- data.frame(words, frequencies)
+
+# Generate the word cloud on top of the image background
+ggplot(new_frame, aes(label = words, size = frequencies)) +
+  # Add the image background
+  annotation_raster(img_raster, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf) +
+  
+  # Generate the word cloud
+  geom_text_wordcloud(aes(color = frequencies)) +
+  scale_size_area(max_size = 20) +
+  
+  # Customize the colors of the words
+  scale_color_gradient(low = "yellow", high = "red") +
+  
+  # Remove axis titles and labels since we want the word cloud only
+  theme_void()
+
+
+```
+
+
+ 
+
+
+
+
