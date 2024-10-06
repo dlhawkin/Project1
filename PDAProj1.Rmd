@@ -271,7 +271,6 @@ course_record_project1<-na.omit(course_record_project1)
 
 
 
-#AIM 1: Examine effects of increasing age on marathon performance in men and women
 In the course record data we have Pecent CR which give percentages by gender
 In the project 1 data we have course record overall has race seconds
 
@@ -363,6 +362,13 @@ ggplot(worst_course_race, aes(x = Race, y = count, fill = Gender)) +
 
 
 # Results
+## Aim 1: Examine effects of increasing age on marathon performance in men and women
+In the **Effects of Age on Marathon Performance in Men and Women** visualization, we observe the marathon performance (measured in runtimes) of men and women across a wide age range, from 14 to 91 years. Based on the data, there is a clear decrease in runtimes up to approximately 25 years of age, indicating improved performance in both men and women during their younger years, with peak performance typically occurring in the mid-twenties. This pattern signifies that younger participants, particularly those in their mid-twenties or younger, perform better in marathons compared to older participants.
+
+After reaching this peak, there is a noticeable and steady increase in runtimes, suggesting a decline in performance as age advances. When comparing genders, men consistently demonstrate faster runtimes across all ages. While both men and women exhibit similar trends in declining performance with age, the slope of decline is steeper for women, particularly around the ages of 60-65. This indicates that the negative effects of aging on marathon performance are more pronounced in women during later life stages.
+
+Overall, the performance gap between genders widens with increasing age, with men generally maintaining faster runtimes compared to women, especially in older age groups. This widening gap highlights the greater impact of aging on female marathon runners in terms of performance decline.
+
 ```{r, fig.width=10, fig.height=6}
 # Line plot of the Marathon Runners Performance by Age 
 age_plot<-ggplot(marathon_performance_by_age, aes(x = `Age (yr)`, y = Runtimes, color = Gender)) +
@@ -379,32 +385,16 @@ age_plot<-ggplot(marathon_performance_by_age, aes(x = `Age (yr)`, y = Runtimes, 
 
 age_plot
 
+```
 
-# Create the boxplot to visualize the grouping 
-age_boxplot<-ggplot(marathon_performance_by_age, aes(x = age_ranges, y =Runtimes, fill = Gender)) +
-  geom_boxplot() +
-  labs(title = "Effects of Age on Marathon Performance in Men and Women",
-       x = "Age Ranges",
-       y = "Runtimes (Performance)") +
-   scale_fill_manual(values = c("F" = "hotpink", "M" = "royalblue"))+
-  theme_classic()
-
-
-age_boxplot
-
-# Create boxplot stratified by diffferent Races 
-ggplot(marathon_performance_by_age, aes(x = age_ranges, y = Runtimes, fill = Gender)) +
-  geom_boxplot() +
-  facet_wrap(~ Race) +  # Facet by Race to create separate plots for each race
-  labs(title = "Effects of Marathon Performance  Stratified by Race, Gender, and Age Group",
-       x = "Age Ranges",
-       y = "Runtimes (Performance)") +
-  theme_classic()+
-  scale_fill_manual(values = c("F" = "hotpink", "M" = "royalblue"))+
-  theme(axis.text.x= element_text(angle =45, vjust= 1, hjust = 1),
-        plot.title = element_text(hjust = 0.5) )
-
-
+In the **Marathon Performance Summary Table by Age Ranges** and the **Effects of Age on Marathon Performance in Men and Women**, we noticed some summary statistics of the boxplot measurements of the marathon runners runtimes based upon their age ranges. The marathon runners were broken up into seven age groups where we noticed a somewhat balance number of people in each group. From the box plot, younger runners **<15–25** tend to perform better, with lower runtimes, as evidenced by lower median values and a tighter interquartile range (IQR). This age group shows more variability (outliers) in performance for both genders.In the summary table, the mean runtime for this group is 11,039, with a median of 10,626. This group performs significantly better than older age groups, with a relatively smaller IQR of 2,917.
+The **26–35 ** and **36–45** age groups demonstrate the best overall marathon performance. From the box plot, both men and women in these groups have lower runtimes and reduced variability (indicated by shorter whiskers and fewer outliers).
+The table shows a continued decline in median runtimes as runners transition from 26–35 (median: 8,896) to 36–45 (median: 9,774). The IQR for both groups remains relatively small (~1,500), indicating more consistent performance in this age range.
+Men tend to outperform women in these age groups, as seen by the lower median runtimes in the blue box plots.
+The oldest age groups **66–75** and **76+** exhibit the largest runtimes and widest performance variability. The box plots show much larger IQRs, particularly for women, reflecting significant variation in performance.
+In the table, the mean and median runtimes increase for the **66–75** (mean: 16,156; median: 15,552) and 76+ (mean: 21,032; median: 20,688) groups. The IQR also expands especially for the 76+ group (IQR: 5,687), indicating a broad range of abilities within this age range.The box plot demonstrates that men, even in older age groups, continue to have better performance (lower runtimes) than women. However, the performance gap between genders widens significantly after age 66, particularly in the 76+ group.
+```{r, fig.width=10, fig.height=6}
+#Create summary statistics table
 marathon_performance_summary_table <-marathon_performance_by_age%>%
   group_by(age_ranges) %>%
   summarise(
@@ -435,10 +425,47 @@ marathon_performance_summary_table %>%
     columns = vars(Mean, Median_Runtime, Q1_Runtime, Q3_Runtime, IQR_Runtime),
     decimals = 0 # Set decimal places for summary statistics
   )
+
+
+
+
+
+```
+
+```{r, fig.width=10, fig.height=6}
+# Create the boxplot to visualize the grouping 
+age_boxplot<-ggplot(marathon_performance_by_age, aes(x = age_ranges, y =Runtimes, fill = Gender)) +
+  geom_boxplot() +
+  labs(title = "Effects of Age on Marathon Performance in Men and Women BoxPlot",
+       x = "Age Ranges",
+       y = "Runtimes (Performance)") +
+   scale_fill_manual(values = c("F" = "hotpink", "M" = "royalblue"))+
+  theme_classic()+
+  theme(
+  plot.title = element_text(hjust = 0.5))
+
+
+age_boxplot
+
+
 ```
 
 
+```{r, fig.width=10, fig.height=6}
+# Create boxplot stratified by diffferent Races 
+ggplot(marathon_performance_by_age, aes(x = age_ranges, y = Runtimes, fill = Gender)) +
+  geom_boxplot() +
+  facet_wrap(~ Race) +  # Facet by Race to create separate plots for each race
+  labs(title = "Effects of Marathon Performance  Stratified by Race, Gender, and Age Group",
+       x = "Age Ranges",
+       y = "Runtimes (Performance)") +
+  theme_classic()+
+  scale_fill_manual(values = c("F" = "hotpink", "M" = "royalblue"))+
+  theme(axis.text.x= element_text(angle =45, vjust= 1, hjust = 1),
+        plot.title = element_text(hjust = 0.5) )
 
+
+```
 
 
 
