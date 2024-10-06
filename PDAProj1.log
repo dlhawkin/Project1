@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.9.15)  5 OCT 2024 22:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2021.9.15)  6 OCT 2024 08:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -668,272 +668,264 @@ File: PDAProj1_files/figure-latex/unnamed-chunk-2-1.pdf Graphic file (type pdf)
 Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-2-1.pdf  use
 d on input line 130.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
+[1
+
+{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./PDAPr
+oj1_files/figure-latex/unnamed-chunk-2-1.pdf>]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
-40.
+59.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
+) [2]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 179.
+(Font)              <10> on input line 304.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 179.
+(Font)              <7> on input line 304.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 179.
+(Font)              <5> on input line 304.
 
-Overfull \hbox (6.00504pt too wide) in paragraph at lines 179--179
+Overfull \hbox (6.00504pt too wide) in paragraph at lines 304--304
 []|\T1/lmr/m/n/10 (-20) HMS/Numeric|  
  []
 
 
-Overfull \hbox (0.78891pt too wide) in paragraph at lines 179--179
-[]|\T1/lmr/m/n/10 (-20) Percent_CRseconds|  
- []
+LaTeX Warning: Float too large for page by 22.15309pt on input line 305.
 
-
-LaTeX Warning: Float too large for page by 33.94362pt on input line 180.
-
-<PDAProj1_files/figure-latex/unnamed-chunk-10-1.pdf, id=5, 710.655pt x 423.5825
-pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-10-1.pdf Graphic file (type pdf
+<PDAProj1_files/figure-latex/unnamed-chunk-11-1.pdf, id=31, 710.655pt x 423.582
+5pt>
+File: PDAProj1_files/figure-latex/unnamed-chunk-11-1.pdf Graphic file (type pdf
 )
-<use PDAProj1_files/figure-latex/unnamed-chunk-10-1.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-10-1.pdf  us
-ed on input line 187.
+<use PDAProj1_files/figure-latex/unnamed-chunk-11-1.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-11-1.pdf  us
+ed on input line 315.
 (pdftex.def)             Requested size: 469.77112pt x 280.00482pt.
-[1
+<PDAProj1_files/figure-latex/unnamed-chunk-11-2.pdf, id=32, 710.655pt x 424.586
+24pt>
+File: PDAProj1_files/figure-latex/unnamed-chunk-11-2.pdf Graphic file (type pdf
+)
+<use PDAProj1_files/figure-latex/unnamed-chunk-11-2.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-11-2.pdf  us
+ed on input line 317.
+(pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
+[3 <./PDAProj1_files/figure-latex/unnamed-chunk-11-1.pdf>] [4]
+<PDAProj1_files/figure-latex/unnamed-chunk-11-3.pdf, id=57, 710.655pt x 424.586
+24pt>
+File: PDAProj1_files/figure-latex/unnamed-chunk-11-3.pdf Graphic file (type pdf
+)
+<use PDAProj1_files/figure-latex/unnamed-chunk-11-3.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-11-3.pdf  us
+ed on input line 319.
+(pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
 
-{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./PDAPr
-oj1_files/figure-latex/unnamed-chunk-2-1.pdf>] [2]
-<PDAProj1_files/figure-latex/unnamed-chunk-10-2.pdf, id=31, 710.655pt x 424.586
-24pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-10-2.pdf Graphic file (type pdf
-)
-<use PDAProj1_files/figure-latex/unnamed-chunk-10-2.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-10-2.pdf  us
-ed on input line 189.
-(pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
-<PDAProj1_files/figure-latex/unnamed-chunk-10-3.pdf, id=32, 710.655pt x 424.586
-24pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-10-3.pdf Graphic file (type pdf
-)
-<use PDAProj1_files/figure-latex/unnamed-chunk-10-3.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-10-3.pdf  us
-ed on input line 191.
-(pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
-[3 <./PDAProj1_files/figure-latex/unnamed-chunk-10-1.pdf> <./PDAProj1_files/fig
-ure-latex/unnamed-chunk-10-2.pdf>]
-Overfull \hbox (35.19713pt too wide) in alignment at lines 195--210
+Overfull \hbox (35.19713pt too wide) in alignment at lines 323--338
  [] [] [] [] [] [] [] 
  []
 
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-<PDAProj1_files/figure-latex/unnamed-chunk-12-1.pdf, id=55, 712.6625pt x 416.55
+[5 <./PDAProj1_files/figure-latex/unnamed-chunk-11-2.pdf> <./PDAProj1_files/fig
+ure-latex/unnamed-chunk-11-3.pdf>]
+<PDAProj1_files/figure-latex/unnamed-chunk-13-1.pdf, id=77, 712.6625pt x 416.55
 624pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-12-1.pdf Graphic file (type pdf
+File: PDAProj1_files/figure-latex/unnamed-chunk-13-1.pdf Graphic file (type pdf
 )
-<use PDAProj1_files/figure-latex/unnamed-chunk-12-1.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-12-1.pdf  us
-ed on input line 261.
+<use PDAProj1_files/figure-latex/unnamed-chunk-13-1.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-13-1.pdf  us
+ed on input line 389.
 (pdftex.def)             Requested size: 469.74974pt x 274.57202pt.
-[4 <./PDAProj1_files/figure-latex/unnamed-chunk-10-3.pdf>]
-Overfull \vbox (5.2835pt too high) has occurred while \output is active []
-
-[5 <./PDAProj1_files/figure-latex/unnamed-chunk-12-1.pdf>]
-<PDAProj1_files/figure-latex/unnamed-chunk-12-2.pdf, id=85, 710.655pt x 424.586
+[6]
+<PDAProj1_files/figure-latex/unnamed-chunk-13-2.pdf, id=85, 710.655pt x 424.586
 24pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-12-2.pdf Graphic file (type pdf
+File: PDAProj1_files/figure-latex/unnamed-chunk-13-2.pdf Graphic file (type pdf
 )
-<use PDAProj1_files/figure-latex/unnamed-chunk-12-2.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-12-2.pdf  us
-ed on input line 263.
+<use PDAProj1_files/figure-latex/unnamed-chunk-13-2.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-13-2.pdf  us
+ed on input line 391.
 (pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
-<PDAProj1_files/figure-latex/unnamed-chunk-12-3.pdf, id=86, 710.655pt x 424.586
+<PDAProj1_files/figure-latex/unnamed-chunk-13-3.pdf, id=86, 710.655pt x 424.586
 24pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-12-3.pdf Graphic file (type pdf
+File: PDAProj1_files/figure-latex/unnamed-chunk-13-3.pdf Graphic file (type pdf
 )
-<use PDAProj1_files/figure-latex/unnamed-chunk-12-3.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-12-3.pdf  us
-ed on input line 265.
+<use PDAProj1_files/figure-latex/unnamed-chunk-13-3.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-13-3.pdf  us
+ed on input line 393.
 (pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
-<PDAProj1_files/figure-latex/unnamed-chunk-12-4.pdf, id=87, 710.655pt x 424.586
-24pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-12-4.pdf Graphic file (type pdf
-)
-<use PDAProj1_files/figure-latex/unnamed-chunk-12-4.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-12-4.pdf  us
-ed on input line 267.
-(pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
-[6 <./PDAProj1_files/figure-latex/unnamed-chunk-12-2.pdf> <./PDAProj1_files/fig
-ure-latex/unnamed-chunk-12-3.pdf>]
-<PDAProj1_files/figure-latex/unnamed-chunk-12-5.pdf, id=116, 710.655pt x 424.58
+[7 <./PDAProj1_files/figure-latex/unnamed-chunk-13-1.pdf> <./PDAProj1_files/fig
+ure-latex/unnamed-chunk-13-2.pdf>]
+<PDAProj1_files/figure-latex/unnamed-chunk-13-4.pdf, id=113, 710.655pt x 424.58
 624pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-12-5.pdf Graphic file (type pdf
+File: PDAProj1_files/figure-latex/unnamed-chunk-13-4.pdf Graphic file (type pdf
 )
-<use PDAProj1_files/figure-latex/unnamed-chunk-12-5.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-12-5.pdf  us
-ed on input line 269.
+<use PDAProj1_files/figure-latex/unnamed-chunk-13-4.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-13-4.pdf  us
+ed on input line 395.
 (pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
-<PDAProj1_files/figure-latex/unnamed-chunk-12-6.pdf, id=117, 710.655pt x 424.58
+<PDAProj1_files/figure-latex/unnamed-chunk-13-5.pdf, id=114, 710.655pt x 424.58
 624pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-12-6.pdf Graphic file (type pdf
+File: PDAProj1_files/figure-latex/unnamed-chunk-13-5.pdf Graphic file (type pdf
 )
-<use PDAProj1_files/figure-latex/unnamed-chunk-12-6.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-12-6.pdf  us
-ed on input line 271.
+<use PDAProj1_files/figure-latex/unnamed-chunk-13-5.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-13-5.pdf  us
+ed on input line 397.
 (pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
-[7 <./PDAProj1_files/figure-latex/unnamed-chunk-12-4.pdf> <./PDAProj1_files/fig
-ure-latex/unnamed-chunk-12-5.pdf>]
-<PDAProj1_files/figure-latex/unnamed-chunk-12-7.pdf, id=147, 710.655pt x 424.58
+[8 <./PDAProj1_files/figure-latex/unnamed-chunk-13-3.pdf> <./PDAProj1_files/fig
+ure-latex/unnamed-chunk-13-4.pdf>]
+<PDAProj1_files/figure-latex/unnamed-chunk-13-6.pdf, id=143, 710.655pt x 424.58
 624pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-12-7.pdf Graphic file (type pdf
+File: PDAProj1_files/figure-latex/unnamed-chunk-13-6.pdf Graphic file (type pdf
 )
-<use PDAProj1_files/figure-latex/unnamed-chunk-12-7.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-12-7.pdf  us
-ed on input line 273.
+<use PDAProj1_files/figure-latex/unnamed-chunk-13-6.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-13-6.pdf  us
+ed on input line 399.
 (pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
-<PDAProj1_files/figure-latex/unnamed-chunk-15-1.pdf, id=148, 457.71pt x 313.17p
+<PDAProj1_files/figure-latex/unnamed-chunk-13-7.pdf, id=144, 710.655pt x 424.58
+624pt>
+File: PDAProj1_files/figure-latex/unnamed-chunk-13-7.pdf Graphic file (type pdf
+)
+<use PDAProj1_files/figure-latex/unnamed-chunk-13-7.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-13-7.pdf  us
+ed on input line 401.
+(pdftex.def)             Requested size: 469.77112pt x 280.66833pt.
+[9 <./PDAProj1_files/figure-latex/unnamed-chunk-13-5.pdf> <./PDAProj1_files/fig
+ure-latex/unnamed-chunk-13-6.pdf>]
+<PDAProj1_files/figure-latex/unnamed-chunk-16-1.pdf, id=174, 457.71pt x 313.17p
 t>
-File: PDAProj1_files/figure-latex/unnamed-chunk-15-1.pdf Graphic file (type pdf
-)
-<use PDAProj1_files/figure-latex/unnamed-chunk-15-1.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-15-1.pdf  us
-ed on input line 280.
-(pdftex.def)             Requested size: 457.72285pt x 313.17877pt.
-[8 <./PDAProj1_files/figure-latex/unnamed-chunk-12-6.pdf> <./PDAProj1_files/fig
-ure-latex/unnamed-chunk-12-7.pdf>]
-<PDAProj1_files/figure-latex/unnamed-chunk-15-2.pdf, id=179, 457.71pt x 316.181
-24pt>
-File: PDAProj1_files/figure-latex/unnamed-chunk-15-2.pdf Graphic file (type pdf
-)
-<use PDAProj1_files/figure-latex/unnamed-chunk-15-2.pdf>
-Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-15-2.pdf  us
-ed on input line 282.
-(pdftex.def)             Requested size: 457.72984pt x 316.19493pt.
-[9 <./PDAProj1_files/figure-latex/unnamed-chunk-15-1.pdf>]
-<PDAProj1_files/figure-latex/unnamed-chunk-16-1.pdf, id=192, 706.64pt x 421.575
-pt>
 File: PDAProj1_files/figure-latex/unnamed-chunk-16-1.pdf Graphic file (type pdf
 )
 <use PDAProj1_files/figure-latex/unnamed-chunk-16-1.pdf>
 Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-16-1.pdf  us
-ed on input line 284.
-(pdftex.def)             Requested size: 469.75874pt x 280.25378pt.
-[10 <./PDAProj1_files/figure-latex/unnamed-chunk-15-2.pdf> <./PDAProj1_files/fi
+ed on input line 408.
+(pdftex.def)             Requested size: 457.72285pt x 313.17877pt.
+<PDAProj1_files/figure-latex/unnamed-chunk-16-2.pdf, id=175, 457.71pt x 316.181
+24pt>
+File: PDAProj1_files/figure-latex/unnamed-chunk-16-2.pdf Graphic file (type pdf
+)
+<use PDAProj1_files/figure-latex/unnamed-chunk-16-2.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-16-2.pdf  us
+ed on input line 410.
+(pdftex.def)             Requested size: 457.72984pt x 316.19493pt.
+[10 <./PDAProj1_files/figure-latex/unnamed-chunk-13-7.pdf> <./PDAProj1_files/fi
 gure-latex/unnamed-chunk-16-1.pdf>]
+<PDAProj1_files/figure-latex/unnamed-chunk-17-1.pdf, id=201, 706.64pt x 421.575
+pt>
+File: PDAProj1_files/figure-latex/unnamed-chunk-17-1.pdf Graphic file (type pdf
+)
+<use PDAProj1_files/figure-latex/unnamed-chunk-17-1.pdf>
+Package pdftex.def Info: PDAProj1_files/figure-latex/unnamed-chunk-17-1.pdf  us
+ed on input line 412.
+(pdftex.def)             Requested size: 469.75874pt x 280.25378pt.
+[11 <./PDAProj1_files/figure-latex/unnamed-chunk-16-2.pdf> <./PDAProj1_files/fi
+gure-latex/unnamed-chunk-17-1.pdf>]
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-336.
+464.
 (/usr/local/texlive/2021/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 423.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 552.
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
- []
-
-[11]
-Underfull \vbox (badness 10000) detected at line 953
- []
-
-
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [12]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [13]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [14]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [15]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [16]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [17]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [18]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [19]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [20]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 [21]
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
 
-Underfull \vbox (badness 10000) detected at line 953
+Underfull \vbox (badness 10000) detected at line 1082
  []
 
-[22] [23] (./PDAProj1.aux) ) 
+[22]
+Underfull \vbox (badness 10000) detected at line 1082
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1082
+ []
+
+[23] [24] (./PDAProj1.aux) ) 
 Here is how much of TeX's memory you used:
- 15847 strings out of 478994
- 244925 string characters out of 5858184
- 719678 words of memory out of 5000000
- 32914 multiletter control sequences out of 15000+600000
- 447227 words of font info for 102 fonts, out of 8000000 for 9000
+ 15914 strings out of 478994
+ 245693 string characters out of 5858184
+ 721553 words of memory out of 5000000
+ 32925 multiletter control sequences out of 15000+600000
+ 459791 words of font info for 130 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 85i,12n,88p,1584b,419s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 85i,12n,88p,1584b,476s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips
 /lm/lm-ec.enc}{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc
 }</usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/loc
@@ -941,12 +933,13 @@ al/texlive/2021/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive
 /2021/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2021/texmf
 -dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2021/texmf-dist/fonts
 /type1/public/lm/lmr17.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/publ
-ic/lm/lmtk10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt
-10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
-Output written on PDAProj1.pdf (23 pages, 4383423 bytes).
+ic/lm/lmri10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtk
+10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></u
+sr/local/texlive/2021/texmf-dist/fonts/type1/public/lm/lmtti10.pfb>
+Output written on PDAProj1.pdf (24 pages, 4403119 bytes).
 PDF statistics:
- 321 PDF objects out of 1000 (max. 8388607)
- 240 compressed objects within 3 object streams
- 33 named destinations out of 1000 (max. 500000)
- 22623 words of extra memory for PDF output out of 24883 (max. 10000000)
+ 342 PDF objects out of 1000 (max. 8388607)
+ 259 compressed objects within 3 object streams
+ 38 named destinations out of 1000 (max. 500000)
+ 28783 words of extra memory for PDF output out of 29859 (max. 10000000)
 

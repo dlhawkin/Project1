@@ -90,6 +90,45 @@ ggplot(new_frame, aes(label = words, size = frequencies)) +
 
 ```
 
+# Introduction 
+
+```{r, eval= FALSE}
+# Currently, there has been an increase in marathon participation and performance in the past two decades. Collaborating with Dr. Brett Romano Ely and Dr. Matther Ely from Department of Health Sciences at Providence College, we will examine the impact of environmental conditions, like temperature, humidity, solar radiation, and wind on marathon performance in men and women. Studies have shown that endurance exercise is degraded with increasing environmental temperature, and the decline in performance is associated with warmer temperatures. Studies have shown that marathon runners prefer cooler temperatures than warmer temperatures due to the body regulating an enormous amount of heat and are likely to overheat in warmer temoeratures.Competing in cooler and desirable weather conditions, can reduce heat exhaustion and heat strokes which are very common in warmer conditions.
+```
+In recent years, marathon participation and performance have seen a marked increase, prompting a deeper exploration into the factors influencing outcomes in these endurance events. In collaboration with Dr. Brett Romano Ely and Dr. Matthew Ely from the Department of Health Sciences at Providence College, this study aims to assess the impact of environmental condition like temperature, humidity, solar radiation, and wind speed on marathon performance in both male and female marathon runners.
+
+This study will focus on **three aims**. The first aim is to examine the effects of increasing age on marathon performance in men and women. Our second aim is to explore the impacts of environmental conditions on marathon performance, and whter the impact differs across age and gender. The last aim is to identify  (WBGT, Flag conditions, temperature, etc) that have the largest impact on marathon performance. I hypothesize that increasing environmental temperatures and unfavorable weather conditions will have a negative impact on marathon performance. Specifically, endurance exercise performance tends to degrade with rising temperatures, and this decline is likely to be exacerbated in longer-distance events, such as marathons, due to the greater physiological demands placed on athletes over extended periods of time.
+
+
+Begin with an exploratory analysis to identify patterns and relationships among key variables. During data preprocessing, note that `Race (0=Boston, 1=Chicago, 2=NYC, 3=TC, 4=D)` corresponds to the `Race `variable in the *course_record* dataset. Also, the `Sex (0=F, 1=M)` variable also corresponds to the `Gender` in the course_record dataset. To have these two variables to match, I rename these variables to `Race` and `Gender`. After further reviewing the data, I noticed that some of the marathon races were denoted differently,like `0` while the other data set indicates race   as `B` to indicate Boston's marathon. To enhance consistency of the variables, we changed the marathon races from `0` to `B`, `1` to `C`, `3` to `TC`, and `4` to `D`. I also changed the binary outcomes of the `Gender` variables to match where `0` = `M` to indicate male and `1` for female.Once that is done, I decided to renamed all the variable names for better understanding and to correlate to code sheet. Once this stage of processing is done, I merged the data by `Race`, `Gender`, and `Year`. This merge was able to keep variables to the left and implemented the other variables that weren't in common. In the course_record variable, the data gives us the course records, but project 1 gives us the percentage off the course record.Because we want to measure  the`Run Times` accuractely, I first converted the course records into seconds and then created a variable to get the actual runtime and marathon time for a participant in seconds.  `(Runtimes = Race_Seconds * (1 + (`Percent CR` / 100))
+
+
+**Exploratory Analysis and Data Preprocessing:** An initial exploratory analysis was conducted to identify patterns and relationships among key variables. During preprocessing, it was observed that `Race (0=Boston, 1=Chicago, 2=NYC, 3=TC, 4=D)` corresponds to the `Race` variable in the *course_record* dataset, while `Sex (0 = F, 1 = M)` corresponds to the `Gender` variable. To ensure consistency, the `Sex` and `Race` variables were renamed to `Gender` and `Race`, respectively.
+
+Further review revealed discrepancies in how some marathon races were coded. For instance, while one dataset used numeric codes (e.g., `0` for Boston), another dataset used letter codes (e.g., `B` for Boston). To standardize these variables, the race codes were recoded from `0` to `B`, `1` to `C`, `3` to `TC`, and `4` to `D`. Additionally, the binary outcomes for `Gender` were modified to align across datasets, with `0` recoded as `M` for male and `1` as `F` for female.
+
+Variable names were then systematically renamed for clarity and consistency with the codebook. After completing these preprocessing steps, the data were merged by `Race`, `Gender`, and `Year`, ensuring that variables from the left dataset were retained, while integrating other variables that were not common across datasets.
+
+To begin with, we will observe the data and notice any commonalities within the variables. We begin our data preprocessing by noticing that`Race (0=Boston, 1=Chicago, 2=NYC, 3=TC, 4=D)` corresponds to the `Race` variables in the course_record data set.
+
+The raw data used for this analysis consisted of 11,564 rows and 14 columns. The data was then processed to observed the missing data to further our analysis. To begin this analysis, I got the sum of missing values from the data set by columns. From this analysis, I noticed that the variables **Flag, Dry bulb Temp C,  Wet bulb Temp C, Percent  Relative Humidity , Black Globe Temp C, Dew Point in C, Wind Speed, and Wet Culb Globe Temp** has missing data.  I observed the missing the data using the `naniar package` in r to find the percentage missing and available in the data. Following this procedure,we found the the number of missing values from each of these columns were 491, making it a grand total 4419 missing values. I observed that missing data only represents 2.2% on the data while we still have a high representation of the data being represented at 97.2%. Therefore, we will remove those irrelevant variables.
+
+
+The raw dataset used for this analysis consisted of 11,564 observations across 14 variables. An initial review of the data was conducted to assess missing values, which would guide subsequent analysis. The sum of missing values was calculated for each variable. From this assessment, it was observed that the variables Flag, Dry Bulb Temp C, Wet Bulb Temp C, Percent Relative Humidity, Black Globe Temp C, Dew Point in C, Wind Speed, and Wet Bulb Globe Temp contained missing values.
+
+To further quantify the extent of missingness, the naniar package in R was employed to calculate the percentage of missing and available data. The analysis revealed that each of these variables had 491 missing values, contributing to a total of 4,419 missing entries across the dataset. However, these missing values accounted for only 2.2% of the total dataset, leaving 97.8% of the data intact and available for analysis.
+
+Given the relatively small proportion of missing data, it was determined that the variables with missing values would be removed, as their exclusion would not significantly impact the overall representation or integrity of the dataset.
+
+Lastly, in Aim 3, we include the two other data sets marathon_dates and aqi_values. In the marathon_dates dataset, ot provided the race, race I changed the marathon race names to correspond to current flow of variables. Then
+
+
+
+
+
+
+
+
 
 ```{r}
 #Course Record  Data Management
@@ -184,7 +223,7 @@ Variables_table<- data_frame(
                "Percent CR", "Dry bulb Temp C","Wet bulb Temp C",        
                "Percent Relative Humidity", "Black Globe Temp C","Solar Radiation",  
                "Dew Point in C", "Wind Speed" ,"Wet Bulb Globe Temp","CR",
-               "Race_Seconds","Percent_CRseconds"),
+               "Race_Seconds","Runtimes"),
   Type= c("Character", "Numeric", "Character", "Character","Numeric",
           "Numeric","Numeric", "Numeric", "Numeric","Numeric","Numeric","Numeric",
           "Numeric","Numeric", "HMS/Numeric", "Numeric","Numeric"),
@@ -208,7 +247,7 @@ Variables_table<- data_frame(
                  "Wet Bulb Globe Temp measures the combined effect of temperature, humidity, wind speed, and solar radiation on humans. Formula WBGT= 0.7 x Tw + 0.2 x Tg+ 0.1 xTd.",
                  "CR is the course record for each marathon.",
                  "Race_Seconds is the course record  measured in seconds.",
-                 "Percent_CRseconds is the converted gender percentage into seconds."
+                 "Runtimes is the converted gender percentage into seconds."
                  )
 )
 
@@ -322,6 +361,8 @@ ggplot(worst_course_race, aes(x = Race, y = count, fill = Gender)) +
 
 ```
 
+
+# Results
 ```{r, fig.width=10, fig.height=6}
 # Line plot of the Marathon Runners Performance by Age 
 age_plot<-ggplot(marathon_performance_by_age, aes(x = `Age (yr)`, y = Runtimes, color = Gender)) +
