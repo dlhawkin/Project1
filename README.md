@@ -20,6 +20,7 @@ The dataset comprises performance data from five major marathons—Boston, New Y
 
 
 # Dependencies
+The R version and packages used in this project are indicated below:
 `R version 4.2.3 (2023-03-15)`
 `reshape2_1.4.4`      
 `corrplot_0.94`     
