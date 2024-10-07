@@ -9,3 +9,9 @@ In recent years, there has been a notable surge in both participation and perfor
 * Examine effects of increasing age on marathon performance in men and women.
 *  Explore the impact of environmental conditions on marathon performance, and whether the impact differs across age and gender.
 * Identify the weather parameters (WBGT, Flag conditions, temperature, etc) that have the largest impact on marathon performance.
+
+
+# Data
+The dataset comprises performance data from five major marathons—Boston, New York, Chicago, Twin Cities, and Grandma's. It includes associated weather parameters such as temperature, humidity, and WBGT, along with air quality metrics like ozone levels expressed in parts per million (PPM).
+
+#Key Files
