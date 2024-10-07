@@ -16,4 +16,26 @@ The dataset comprises performance data from five major marathons—Boston, New Y
 
 # Key Files
 `PDAProj1.pdf` : Finalize report that consist of the exploratory data analysis and interpretations of the impact of environmental conditions on maraton runners performance based on gender and age.
+`PDAProj1.Rmd`: Rmd file that contains code, analysis and interpretations.
+
+
+# Dependencies
+`R version 4.2.3 (2023-03-15)`
+`reshape2_1.4.4`      
+`corrplot_0.94`     
+`magick_2.8.5`     
+`ggwordcloud_0.6.2`
+`gt_0.11.0`         
+`gridExtra_2.3`     
+`knitr_1.46`        
+`kableExtra_1.4.0`  
+`visdat_0.6.0`      
+`naniar_1.1.0`       
+`stringr_1.5.1`     
+`dplyr_1.1.4`            
+`tidyr_1.3.1`          
+`ggplot2_3.5.1`    
+`tidyverse_2.0.0`   
+`lubridate_1.9.3`   
+`readr_2.1.5`     
 
