@@ -113,7 +113,7 @@ Variable names were then systematically renamed for clarity and consistency with
 To begin with, we will observe the data and notice any commonalities within the variables. We begin our data preprocessing by noticing that`Race (0=Boston, 1=Chicago, 2=NYC, 3=TC, 4=D)` corresponds to the `Race` variables in the course_record data set.
 
 ## Missingness
-The raw data used for this analysis consisted of 11,564 rows and 14 columns. To begin this analysis, I got the sum of missing values from the dataset by columns. From this analysis, it was observed that the variables Flag, Dry Bulb Temp C, Wet Bulb Temp C, Percent Relative Humidity, Black Globe Temp C, Dew Point in C, Wind Speed, and Wet Bulb Globe Temp contained missing data. The missing data were examined using the naniar package in R to determine the percentage missing and available in the data. Following this procedure, each of these columns was found to have 491 missing values, totaling 4,419 missing values overall, with a 4.25 missingness percentage. To further quantify the extent of missingness, the `naniar package` in R was employed to calculate the percentage of missing and available data.The missing data represent only 2.2% of the dataset, while 97.2% of the data remains well-represented. Therefore,these missing data properties were from remove further analysis.
+The raw data used for this analysis consisted of 11,564 rows and 14 columns. To begin this analysis, I got the sum of missing values from the dataset by columns. From this analysis, it was observed that the variables `Flag`, `Dry Bulb Temp C`, `Wet Bulb Temp C`, `Percent Relative Humidity`, `Black Globe Temp C`, `Dew Point in C`, `Wind Speed`, and `Wet Bulb Globe Temp` contained missing data. The missing data were examined using the `naniar` package in R to determine the percentage missing and available in the data. Following this procedure, each of these columns was found to have 491 missing values, totaling 4,419 missing values overall, with a 4.25 missingness percentage. To further quantify the extent of missingness, the `naniar package` in R was employed to calculate the percentage of missing and available data.The missing data represent only 2.2% of the dataset, while 97.2% of the data remains well-represented. Therefore,these missing data properties were remove from further analysis.
 
 
 
@@ -176,62 +176,6 @@ course_record_project1 <- course_record_project1 %>%
 
 ```
 
-```{r}
-#Data Management of the marathon data set and air quality 
-#Change Race Names
-marathon_dates <- marathon_dates %>%
-   mutate(marathon = case_when(
-     marathon == "NYC" ~ "NY",              
-     marathon == "Grandmas" ~ "D",
-     marathon == "Boston" ~ "B",
-     marathon == "Twin Cities" ~"TC" 
-  ))
-
-#Change column names to match course_record_project column names
-colnames(marathon_dates)[colnames(marathon_dates) == "marathon"] ="Race"
-colnames(marathon_dates)[colnames(marathon_dates) == "year"] ="Year"
-
-# Change formatting  of the dates
-marathon_dates <- marathon_dates %>%
- mutate(date = as.Date(date, format = "%Y-%m-%d"))
-
-# Combine the marathon dates datframe to my current dataframe by using left_join
-course_record_project1 <- course_record_project1%>%
-    left_join(marathon_dates, by = c("Race", "Year"))
-
-
-# Change the marathon variable to Race to match corresponding data and change race names
-aqi_values <- aqi_values %>%
-   rename(Race = marathon) %>%
-     mutate(
-     Race = case_when(
-     Race == "NYC" ~ "NY",              
-     Race == "Grandmas" ~ "D",
-     Race == "Boston" ~ "B",
-     Race == "Twin Cities" ~"TC" 
-  ),
-    date = as.Date(date_local, format = "%Y-%m-%d"),
-    Year = as.numeric(format(date, "%Y"))
-      ) %>%
-   select(-date_local) #Remove the date_local variable
-
-
-# calculate average ozone ppm (8-hour avg)
-avg_ppm <- aqi_values %>%
-   filter(units_of_measure == "Parts per million",
-          sample_duration == "8-HR RUN AVG BEGIN HOUR") %>%
-          group_by(Race, Year, date) %>%
-          summarize(avg_ppm = mean(arithmetic_mean, na.rm = T)) %>%
-          ungroup()
-
-
-
-# Merge data_frame to current dataframe
- course_record_project1 <-  course_record_project1 %>%
-   left_join(avg_ppm, by = c("Race", "Year", "date"))
- 
- 
-```
 
 
 
@@ -337,10 +281,9 @@ table_summary<- kable(merged_df, "latex", booktabs = TRUE, caption = "Marathon R
 
 
 
-
+#Remove all na's
 course_record_project1<-na.omit(course_record_project1)
 
-library(dplyr)
 
 
 ```
@@ -551,7 +494,7 @@ ggplot(marathon_performance_by_age, aes(x = age_ranges, y = Runtimes, fill = Gen
 
 ## Aim 2: Explore the impact of environmental conditions on marathon performance, and whether the impact differs across age and gender.
 
-To begin this analysis, a linear model will be constructed to demonstrate the relationship and impact of environmental conditions on marathon performance, considering differences across age and gender. The outcome variable is the marathon runners' runtimes, analyzed in conjunction with environmental conditions, gender, and age. Upon examining the model, it was noticed that the weather parameters highlighted in blue, such as `Dry Bulb Temp C` (p=0.00001), `Percent Relative Humidity` (p=0.00001), `Black Globe Temp C` (p=0.0000), `Dew Point in C` (p=0.00003), `Solar Radiation` (p=0.0000), and `Wet Bulb Globe Temp` (p=0.00001), demonstrated statistical significance (p<0.05). Other significant parameters include the interaction terms, such as `Age (yr)` (p=0.00000), `GenderM` (p=0.00001), `Dry Bulb Temp C:Age (yr)` (p=0.00002), `Percent Relative Humidity:Age (yr)` (p=0.0000), `Black Globe Temp C:Age (yr)` (p=0.00023), `Percent Relative Humidity:Gender` (p=0.01862), `Age (yr):GenderM` (p=0.01671), `Age (yr):Wet Bulb Globe Temp` (p=0.00017), `Solar Radiation:Age (yr)` (p=0.00000), and `Dew Point in C:Age (yr)` (p=0.00706).
+To begin this analysis, a linear model will be constructed to demonstrate the relationship and impact of environmental conditions on marathon performance, considering differences across age and gender. The outcome variable is the marathon runners' runtimes, analyzed in conjunction with environmental conditions, gender, and age. Upon examining the model, it was noticed that the weather parameters highlighted in blue, such as `Dry Bulb Temp C` (p=0.00001), `Percent Relative Humidity` (p=0.00001), `Black Globe Temp C` (p=0.0000), `Dew Point in C` (p=0.00003), `Solar Radiation` (p=0.0000), and `Wet Bulb Globe Temp` (p=0.00001), demonstrated statistical significance (p<0.05). Other significant parameters include the interaction terms, such as `Age (yr)` (p=0.00000), `GenderM` (p=0.00001), `Dry Bulb Temp C:Age (yr)` (p=0.00002), `Percent Relative Humidity:Age (yr)` (p=0.0000), `Black Globe Temp C:Age (yr)` (p=0.00023), `Percent Relative Humidity:Gender` (p=0.01862), `Age (yr):GenderM` (p=0.01671), `Age (yr):Wet Bulb Globe Temp` (p=0.00017), `Solar Radiation:Age (yr)` (p=0.00000), and `Dew Point in C:Age (yr)` (p=0.00706). *These significant weather parameters were used in further analysis in the Supplementary Materials below.*
 
 ```{r}
  # Create Dataframe to allocate for other environmental conditions
@@ -606,7 +549,7 @@ model_table %>%
 ```
 
 
-By analyzing the statistical significance of weather parameters, correlations with ages were observed. `Runtimes and Age` have a correlation of 0.67, indicating a strong positive relationship; as runners age, marathon runtimes tend to increase. `Dry Bulb Temp C and Black Globe Temp` share a strong correlation of 0.85, suggesting that these measurements, which gauge different aspects of weather temperature, tend to increase together. `Wet Bulb Globe Temp and Dry Bulb Temp C` exhibit a very strong correlation of 0.97, indicating that wet bulb globe temperature and dry bulb temperature often rise together. `Dew Point in C and Wet Bulb Globe Temp` have a strong correlation of 0.90, showing that higher dew points (indicating more moisture in the air) tend to be associated with higher wet bulb globe temperatures, reflecting the impact of humidity on heat stress. The correlation of 0.67 between `Age and Runtimes` is higher than most correlations with environmental conditions, suggesting that age has a stronger impact on performance than many environmental factors. This indicates that age plays a significant role in marathon performance, regardless of environmental conditions.
+By analyzing the statistical significance of weather parameters, correlations with ages were observed. `Runtimes and Age` have a correlation of (0.67), indicating a strong positive relationship; as runners age, marathon runtimes tend to increase. `Dry Bulb Temp C and Black Globe Temp` share a strong correlation of (0.85), suggesting that these measurements, which gauge different aspects of weather temperature, tend to increase together. `Wet Bulb Globe Temp and Dry Bulb Temp C` exhibit a very strong correlation of (0.97), indicating that wet bulb globe temperature and dry bulb temperature often rise together. `Dew Point in C and Wet Bulb Globe Temp` have a strong correlation of (0.90), showing that higher dew points (indicating more moisture in the air) tend to be associated with higher wet bulb globe temperatures, reflecting the impact of humidity on heat stress. The correlation of (0.67) between `Age and Runtimes` is higher than most correlations with environmental conditions, suggesting that age has a stronger impact on performance than many environmental factors. This indicates that age plays a significant role in marathon performance, regardless of environmental conditions.
 
 ```{r, fig.width=10, fig.height=6}
 #Create Correlation plot
@@ -642,7 +585,62 @@ environmental_conditions_plot
 
 
 ## Aim 3: Identify the weather parameters (WBGT, Flag conditions, temperature, etc) that have the largest impact on marathon performance.
+```{r}
+#Data Management of the marathon data set and air quality 
+#Change Race Names
+marathon_dates <- marathon_dates %>%
+   mutate(marathon = case_when(
+     marathon == "NYC" ~ "NY",              
+     marathon == "Grandmas" ~ "D",
+     marathon == "Boston" ~ "B",
+     marathon == "Twin Cities" ~"TC" 
+  ))
 
+#Change column names to match course_record_project column names
+colnames(marathon_dates)[colnames(marathon_dates) == "marathon"] ="Race"
+colnames(marathon_dates)[colnames(marathon_dates) == "year"] ="Year"
+
+# Change formatting  of the dates
+marathon_dates <- marathon_dates %>%
+ mutate(date = as.Date(date, format = "%Y-%m-%d"))
+
+# Combine the marathon dates datframe to my current dataframe by using left_join
+course_record_project1 <- course_record_project1%>%
+    left_join(marathon_dates, by = c("Race", "Year"))
+
+
+# Change the marathon variable to Race to match corresponding data and change race names
+aqi_values <- aqi_values %>%
+   rename(Race = marathon) %>%
+     mutate(
+     Race = case_when(
+     Race == "NYC" ~ "NY",              
+     Race == "Grandmas" ~ "D",
+     Race == "Boston" ~ "B",
+     Race == "Twin Cities" ~"TC" 
+  ),
+    date = as.Date(date_local, format = "%Y-%m-%d"),
+    Year = as.numeric(format(date, "%Y"))
+      ) %>%
+   select(-date_local) #Remove the date_local variable
+
+
+# calculate average ozone ppm (8-hour avg)
+avg_ppm <- aqi_values %>%
+   filter(units_of_measure == "Parts per million",
+          sample_duration == "8-HR RUN AVG BEGIN HOUR") %>%
+          group_by(Race, Year, date) %>%
+          summarize(avg_ppm = mean(arithmetic_mean, na.rm = T)) %>%
+          ungroup()
+
+
+
+# Merge data_frame to current dataframe
+ course_record_project1 <-  course_record_project1 %>%
+   left_join(avg_ppm, by = c("Race", "Year", "date"))
+ 
+ 
+```
 
 ```{r}
 weather_parameters<-course_record_project1%>%
@@ -758,7 +756,10 @@ In the **Weather Parameters with the Largest Impact on Marathon Performance Corr
 (Check Supplementary Materials for extra analysis).
 
 # Conclusion and Discussion
+In conclusion,the data examining marathon performance across a broad age range from 14 to 91 years reveals a clear trend: runtimes decrease, indicating improved performance, from mid twenties to about 45 years of age, peaking typically in the mid-twenties. This suggests that younger athletes, especially those in their mid-twenties or younger, tend to perform better compared to their older counterparts. Beyond this peak, there is a consistent increase in runtimes with advancing age, signaling a decline in performance. This decline is more pronounced in women, particularly noticeable in the steeper performance drop observed around the ages of 60-65. Men, while also experiencing a decline, consistently post faster runtimes across all ages. The gap between the genders widens with age, with men maintaining faster runtimes compared to women in older age groups. This widening gap underscores a more significant impact of aging on female marathon runners, highlighting a greater decline in performance as they age.
 
+The exploratory data analysis demonstrates considerable impact of environmental conditions on marathon performance across both genders and age groups.  According to *Aerobic Performance is Degraded Despite Modest Hypothermia in Hot Environments*, "Endurance exercise performance is degraded within increasing environmental temperature, and the decline in performance is associated with warmer temperature is magnified with longer-distance events such as the marathon foot race (Ely, B. R., et.al). Studies have shown that marathon runners prefer cooler temperatures rather than warmer and humid temperatures due to the body regulating excessive amounts of heat. Running in cooler weather conditions, can reduce risks of
+heat exhaustion or heat strokes which are common in warmer conditions. When the temperature is lower, the cardiovascular system doesn't have to work as hard to cool the body .This help runners maintain pace without their heart rate increasing as much in hotter conditions.  Runners typically achieve better performance under Green flag conditions, which denote safer weather scenarios with lower Wet Bulb Globe Temperature (WBGT), evidenced by the lower median runtimes in comparison to more severe conditions marked by Red, White, and Yellow flags. With the transition to Red and Yellow flags, indicative of higher WBGT levels, there is a distinct drop in performance, seen in the increased median runtimes. This performance decline under harsher weather conditions can be linked to elevated temperatures and humidity, which are characteristic of these flags. Furthermore, the increased variability in performance under Red and Yellow flags may suggest a broad spectrum of individual heat tolerances among runners. Although both male and female runners exhibit similar patterns in response to changing flag conditions, females consistently display slightly higher median runtimes in all conditions indicating slower runtimes.
 
 
 
@@ -920,9 +921,17 @@ table_summary
 \newpage
 # References
 Ely, B. R., Cheuvront, S. N., Kenefick, R. W., & Sawka, M. N. (2010). Aerobic performance is degraded, despite modest hyperthermia, in hot environments. Med Sci Sports Exerc, 42(1), 135-41.
+
+
 Ely, M. R., Cheuvront, S. N., Roberts, W. O., & Montain, S. J. (2007). Impact of weather on marathon-running performance. Medicine and science in sports and exercise, 39(3), 487-493.
+
+
 Kenney, W. L., & Munce, T. A. (2003). Invited review: aging and human temperature regulation. Journal of applied physiology, 95(6), 2598-2603.
+
+
 Besson, T., Macchi, R., Rossi, J., Morio, C. Y., Kunimasa, Y., Nicol, C., ... & Millet, G. Y. (2022). Sex differences in endurance running. Sports medicine, 52(6), 1235-1257.
+
+
 Yanovich, R., Ketko, I., & Charkoudian, N. (2020). Sex differences in human thermoregulation: relevance for 2020 and beyond. Physiology, 35(3), 177-184.
 \newpage
 # Code Appendix
